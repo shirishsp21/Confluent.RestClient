@@ -13,17 +13,45 @@ namespace Confluent.TestHarness
 {
     public partial class TestApp : Form
     {
-        private readonly IConfluentClient _confluentClient;
+        private IConfluentClient _confluentClient;
         private readonly Random _random = new Random();
         private readonly string _baseUrl = ConfigurationManager.AppSettings["Confluent.KafkaBaseUrl"];
         private readonly TimeSpan _requestTimeout = TimeSpan.Parse(ConfigurationManager.AppSettings["Confluent.RequestTimeout"]);
+        private readonly string _authUsername = ConfigurationManager.AppSettings["Confluent.Auth.Username"];
+        private readonly string _authPassword = ConfigurationManager.AppSettings["Confluent.Auth.Password"];
 
         public TestApp()
         {
             InitializeComponent();
-            _confluentClient = new ConfluentClient(new ConfluentClientSettings(_baseUrl, _requestTimeout));
+            BuildConfluentClient();
         }
 
+        private void BuildConfluentClient()
+        {
+            Boolean usernameSpecified = false;
+            Boolean passwordSpecified = false;
+            if (!string.IsNullOrEmpty(_authUsername) && _authUsername.ToLowerInvariant() != "[username]")
+            {
+                this.textBoxUsername.Text = _authUsername;
+                usernameSpecified = true;
+            }
+
+            if (!string.IsNullOrEmpty(_authPassword) && _authPassword.ToLowerInvariant() != "[password]")
+            {
+                this.textBoxPassword.Text = _authPassword;
+                passwordSpecified = true;
+            }
+
+            if (usernameSpecified && passwordSpecified) {
+                _confluentClient = new ConfluentClient(new ConfluentClientSettings(_baseUrl, _requestTimeout,
+                    new BasicConfluentClientAuthentication(_authUsername, _authPassword)));
+            } 
+            else
+            {
+                _confluentClient = new ConfluentClient(new ConfluentClientSettings(_baseUrl, _requestTimeout, null));
+            }
+        }
+        
         private Person GetPerson()
         {
             return new Person { Name = Guid.NewGuid().ToString("N"), Age = _random.Next(20, 100) };

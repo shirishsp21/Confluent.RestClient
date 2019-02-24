@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicConfluentClientAuthentication.cs" />
     <Compile Include="Exceptions\ConfluentApiException.cs" />
     <Compile Include="ConfluentClient.cs" />
     <Compile Include="DefaultConfluentClientSettings.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Exceptions\ConfluentApiUnavailableException.cs" />
     <Compile Include="HttpRequestMessageExtensions.cs" />
     <Compile Include="IConfluentClient.cs" />
+    <Compile Include="IConfluentClientAuthentication.cs" />
     <Compile Include="IConfluentClientSettings.cs" />
     <Compile Include="Model\AvroMessage.cs" />
     <Compile Include="Model\AvroRecord.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Model\TopicConfiguration.cs" />
     <Compile Include="Model\Topic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Encoder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +29,21 @@ namespace Confluent.RestClient
         {
             _clientSettings = clientSettings;
             _client = new HttpClient { Timeout = clientSettings.RequestTimeout };
+            if (_clientSettings.Authentication != null)
+            {
+                _clientSettings.Authentication.ApplyAuthentication(_client);
+            }
+
+            if (_clientSettings.KafkaBaseUrl.ToLowerInvariant().StartsWith("https"))
+            {
+                InitializeServicePointManager();
+            }
+        }
+
+        private void InitializeServicePointManager()
+        {
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
         public async Task<ConfluentResponse<List<string>>> GetTopicsAsync()
@@ -289,7 +304,6 @@ namespace Confluent.RestClient
         {
             baseUri = (string.IsNullOrWhiteSpace(baseUri) ? _clientSettings.KafkaBaseUrl : baseUri).TrimEnd('/', '\\');
             requestUri = string.Format("{0}{1}", baseUri, requestUri);
-
             return new HttpRequestMessage(method, requestUri);
         }
 

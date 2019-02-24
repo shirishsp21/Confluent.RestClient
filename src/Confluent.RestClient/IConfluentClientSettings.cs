@@ -6,5 +6,6 @@ namespace Confluent.RestClient
     {
         string KafkaBaseUrl { get; }
         TimeSpan RequestTimeout { get; }
+        IConfluentClientAuthentication Authentication { get; }
     }
 }
