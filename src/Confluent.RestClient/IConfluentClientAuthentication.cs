@@ -10,6 +10,5 @@ namespace Confluent.RestClient
     public interface IConfluentClientAuthentication
     {
         void ApplyAuthentication(HttpClient client);
-        void ApplyAuthentication(HttpRequestMessage request);
     }
 }

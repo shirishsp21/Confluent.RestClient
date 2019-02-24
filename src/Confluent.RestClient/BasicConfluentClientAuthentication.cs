@@ -19,10 +19,5 @@ namespace Confluent.RestClient
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Encoder.EncodeTo64(String.Format("{0}:{1}", Username, Password)));
         }
-
-        public void ApplyAuthentication(HttpRequestMessage message)
-        {
-            message.Headers.Add("Authorization", String.Format("Basic {0}", Encoder.EncodeTo64(String.Format("{0}:{1}", Username, Password))));
-        }
     }
 }
